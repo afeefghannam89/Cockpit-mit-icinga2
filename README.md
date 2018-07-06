@@ -1,0 +1,1 @@
+# Cockpit-mit-icinga2
