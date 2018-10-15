@@ -1,39 +1,17 @@
-# cockpit::repo - Used for managing package repositories for cockpit
+# cockpit::repo - Used for managing the cockpit and kdump service
 #
-class cockpit::repo {
+class cockpit::service {
  
-  if $::cockpit::manage_repo {
- 
-    case $::osfamily {
-      'RedHat': {
-        case $::operatingsystem {
-          'CentOS': {
-            require ::cockpit::repo::centos
-          }
-          'Fedora': {
-            require ::cockpit::repo::fedora
-          }
-          default: {
-            # code
-          }
-        }
-      }
-      'Debian': {
-        case $::operatingsystem {
-          'Ubuntu': {
-            require ::cockpit::repo::ubuntu
-          }
-          'Debian': {
-            require ::cockpit::repo::debian
-          }
-          default: {
-            # code
-          }
-        }
-      }
-      default: {
-        # code
-      }
+  if $::cockpit::manage_service {
+    service { $::cockpit::service_name:
+      ensure => $::cockpit::service_ensure,
+      enable => $::cockpit::service_enable,
     }
   }
+  if $::cockpit::manage_kdump_service {
+    service { $::cockpit::kdump_service_name:
+      ensure => $::cockpit::kdump_service_ensure,
+      enable => $::cockpit::kdump_service_enable,
+  }
+ }
 }
