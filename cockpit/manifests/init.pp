@@ -48,29 +48,23 @@ class cockpit (
   Array $package_name       = $::cockpit::params::package_name,
   String $package_version   = $::cockpit::params::package_version,
   Optional[Integer] $port   = $::cockpit::params::port, # mit optional können wir auch als undef definieren
-  String $service_ensure    = $::cockpit::params::service_ensure, 
-  Array $service_name      = $::cockpit::params::service_name,
-  Boolean $service_enable   = $::cockpit::params::service_enable,
+  String $service_ensure    = $::cockpit::params::service_ensure,
+  String $service_name      = $::cockpit::params::service_name,
+  Boolean $service_enable   = $::cockpit::params::service_enable,  #extra geschrieben
   Boolean $yum_preview_repo = $::cockpit::params::yum_preview_repo,
-  Boolean $manage_kdump_conf = $::cockpit::params::manage_kdump_conf,
-  Boolean $manage_kdump_service = $::cockpit::params::manage_kdump_service,
-  String $kdump_service_name = $::cockpit::params::kdump_service_name,
-  String $kdump_service_ensure = $::cockpit::params::kdump_service_ensure,
-  Boolean $kdump_service_enable = $::cockpit::params::kdump_service_enable,
   ) inherits ::cockpit::params {
-
+ 
   class { '::cockpit::repo': } ->
   class { '::cockpit::install': } ->
   class { '::cockpit::config': } ~>
   class { '::cockpit::service': } ->
   Class['::cockpit']
-
+ 
   # Update packages on repo refresh
   Class['::cockpit::repo'] ~>
   Class['::cockpit::install']
-  
-  reboot { 'after run':
+reboot { 'after run':
     subscribe  => File_line[ 'replace a value to /etc/default/grub'] ,
+    timeout    => '0',
  }
 }
-
